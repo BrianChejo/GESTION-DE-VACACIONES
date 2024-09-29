@@ -1,25 +1,26 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Navbar from './components/Navbar';  // Importamos el componente Navbar
+import SolicitarVacaciones from './pages/SolicitarVacaciones';
+import Inicio from './pages/Inicio';
+import AprobacionVacaciones from './pages/AprobacionVacaciones';
+import GestionUsuarios from './pages/GestionUsuarios';
+import Calendario from './pages/Calendario';
+import Perfil from './pages/Perfil';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Navbar /> {/* Colocamos la Navbar para que aparezca en todas las páginas */}
+      <Routes>
+        <Route path="/" element={<Inicio />} />
+        <Route path="/solicitar-vacaciones" element={<SolicitarVacaciones />} />
+        <Route path="/aprobacion-vacaciones" element={<AprobacionVacaciones />} />
+        <Route path="/calendario" element={<Calendario />} />
+        <Route path="/usuarios" element={<GestionUsuarios />} />
+        <Route path="/perfil" element={<Perfil />} />
+      </Routes>
+    </Router>
   );
 }
 
