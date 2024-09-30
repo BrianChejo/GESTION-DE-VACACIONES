@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './FormStyles.css';
 
 const SolicitarVacaciones: React.FC = () => {
   const [fechaInicio, setFechaInicio] = useState('');
@@ -17,15 +18,28 @@ const SolicitarVacaciones: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>Fecha de Inicio:</label>
-      <input type="date" value={fechaInicio} onChange={(e) => setFechaInicio(e.target.value)} required />
-      
-      <label>Fecha de Fin:</label>
-      <input type="date" value={fechaFin} onChange={(e) => setFechaFin(e.target.value)} required />
-      
-      <button type="submit">Solicitar Vacaciones</button>
-    </form>
+    <div>
+      <h2>Solicitar Vacaciones</h2>
+      <form onSubmit={handleSubmit}>
+        <label>Fecha de Inicio:</label>
+        <input 
+          type="date" 
+          value={fechaInicio} 
+          onChange={(e) => setFechaInicio(e.target.value)} 
+          required 
+        />
+
+        <label>Fecha de Fin:</label>
+        <input 
+          type="date" 
+          value={fechaFin} 
+          onChange={(e) => setFechaFin(e.target.value)} 
+          required 
+        />
+
+        <button type="submit">Solicitar Vacaciones</button>
+      </form>
+    </div>
   );
 };
 

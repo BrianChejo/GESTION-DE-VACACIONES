@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const db = require('./db');  // Importamos la conexión a MySQL
+//const db = require('./db');  // Importamos la conexión a MySQL
 const vacacionesRoutes = require('./routes/vacaciones');  // Importamos las rutas de vacaciones
 const usuariosRoutes = require('./routes/usuarios');  // Importamos las rutas de usuarios
 
