@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';  // Importamos Link para volver al login
 import './FormStyles.css';  // Reutilizamos los estilos del formulario
+import './Register.css';
 
 const Register: React.FC = () => {
   const [nombre, setNombre] = useState('');
