@@ -1,9 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-//const db = require('./db');  // Importamos la conexión a MySQL
-const vacacionesRoutes = require('./routes/vacaciones');  // Importamos las rutas de vacaciones
-const usuariosRoutes = require('./routes/usuarios');  // Importamos las rutas de usuarios
+const vacacionesRoutes = require('./routes/vacaciones');
+const usuariosRoutes = require('./routes/usuarios');
+const authRoutes = require('./routes/auth');  // Importamos las rutas de autenticación
 
 const app = express();
 const port = 5000;
@@ -18,8 +18,9 @@ app.get('/', (req, res) => {
 });
 
 // Rutas de la API
-app.use('/api/vacaciones', vacacionesRoutes);  // Rutas para las vacaciones
-app.use('/api/usuarios', usuariosRoutes);      // Rutas para los usuarios
+app.use('/api/vacaciones', vacacionesRoutes);  // Rutas para vacaciones
+app.use('/api/usuarios', usuariosRoutes);      // Rutas para usuarios
+app.use('/api', authRoutes);                   // Rutas para autenticación (login, register)
 
 // Iniciar el servidor
 app.listen(port, () => {
