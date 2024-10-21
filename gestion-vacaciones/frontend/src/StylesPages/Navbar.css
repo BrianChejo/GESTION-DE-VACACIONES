@@ -1,0 +1,81 @@
+/* Estilos generales para la barra de navegación */
+.navbar {
+  background-color: #007bff;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;  /* Hacer que la navbar ocupe todo el ancho de la pantalla */
+  position: fixed;  /* Fija la navbar en la parte superior */
+  top: 0;
+  left: 0;
+  z-index: 1000;  /* Asegura que la navbar siempre esté por encima de otros elementos */
+}
+
+/* Estilos para el logo o título */
+.navbar-logo a {
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+/* Estilos para los enlaces de navegación */
+.navbar-links {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 20px;
+}
+
+.navbar-links li {
+  display: inline;
+}
+
+.navbar-links li a {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.navbar-links li a:hover {
+  color: #ffdd57;  /* Color en hover */
+}
+
+/* Estilos para pantallas pequeñas (responsivo) */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .navbar-links {
+    flex-direction: column;
+    width: 100%;
+    gap: 15px;
+    margin-top: 10px;
+  }
+
+  .navbar-links li {
+    text-align: left;
+    width: 100%;
+  }
+
+  .navbar-links li a {
+    padding: 10px;
+    display: block;
+    width: 100%;
+    background-color: #0056b3;
+    border-radius: 4px;
+    text-align: center;
+  }
+
+  .navbar-links li a:hover {
+    background-color: #003d80;
+    color: white;
+  }
+}

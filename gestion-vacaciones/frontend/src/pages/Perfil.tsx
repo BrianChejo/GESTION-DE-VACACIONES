@@ -1,8 +1,12 @@
 import React from 'react';
+import Navbar from '../components/Navbar';
+import '../StylesPages/Perfil.css';
+
 
 const Perfil: React.FC = () => {
   return (
     <div>
+      <Navbar />
       <h1>Mi Perfil</h1>
       <p>Nombre: Juan Pérez</p>
       <p>Días de vacaciones disponibles: 10</p>

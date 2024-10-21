@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './TableStyles.css';
+import Navbar from '../components/Navbar';
+import '../StylesPages/AprobacionVacaciones.css';
+
 
 const AprobacionVacaciones: React.FC = () => {
   const [solicitudes, setSolicitudes] = useState<any[]>([]);
@@ -25,6 +27,7 @@ const AprobacionVacaciones: React.FC = () => {
 
   return (
     <div>
+      <Navbar />
       <h1>Aprobación de Vacaciones</h1>
       <table>
         <thead>

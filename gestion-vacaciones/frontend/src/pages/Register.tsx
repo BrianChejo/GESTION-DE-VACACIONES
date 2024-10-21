@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';  // Importamos Link para volver al login
-import './FormStyles.css';  // Reutilizamos los estilos del formulario
-import './Register.css';
+import { Link } from 'react-router-dom';
+import '../StylesPages/Register.css'; 
 
 const Register: React.FC = () => {
   const [nombre, setNombre] = useState('');
@@ -27,34 +26,33 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="register-container">
       <h2>Registrarse</h2>
       <form onSubmit={handleSubmit}>
-        <label>Nombre:</label>
-        <input 
-          type="text" 
-          value={nombre} 
-          onChange={(e) => setNombre(e.target.value)} 
-          required 
+        <input
+          type="text"
+          value={nombre}
+          onChange={(e) => setNombre(e.target.value)}
+          placeholder="Nombre completo"
+          required
         />
 
-        <label>Email:</label>
-        <input 
-          type="email" 
-          value={email} 
-          onChange={(e) => setEmail(e.target.value)} 
-          required 
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Correo electrónico"
+          required
         />
 
-        <label>Contraseña:</label>
-        <input 
-          type="password" 
-          value={password} 
-          onChange={(e) => setPassword(e.target.value)} 
-          required 
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Contraseña"
+          required
         />
 
-        <label>Tipo de Usuario:</label>
         <select value={role} onChange={(e) => setRole(e.target.value)}>
           <option value="cliente">Cliente</option>
           <option value="recursos_humanos">Recursos Humanos</option>
@@ -67,7 +65,7 @@ const Register: React.FC = () => {
         {success && <p className="success">{success}</p>}
       </form>
 
-      <p>¿Ya tienes una cuenta? <Link to="/login">Inicia sesión aquí</Link></p>  {/* Enlace al login */}
+      <Link to="/login" className="login-link">¿Ya tienes una cuenta? Inicia sesión aquí</Link>
     </div>
   );
 };

@@ -1,0 +1,76 @@
+/* Contenedor principal */
+.solicitar-vacaciones-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f4f6f9; /* Fondo más claro */
+    font-family: 'Arial', sans-serif;
+    padding: 20px;
+}
+
+/* Card del formulario */
+.solicitar-vacaciones-card {
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1); /* Sombra más suave */
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+}
+
+/* Título */
+.solicitar-vacaciones-card h2 {
+    color: #333;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+}
+
+/* Formulario */
+.solicitar-vacaciones-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Etiquetas */
+.solicitar-vacaciones-form label {
+    font-size: 1rem;
+    color: #555;
+    text-align: left;
+}
+
+/* Inputs y selectores */
+.solicitar-vacaciones-form input[type="date"] {
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fafafa;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+/* Estilo al enfocar los inputs */
+.solicitar-vacaciones-form input:focus {
+    border-color: #4A90E2;
+    background-color: #fff;
+    outline: none;
+}
+
+/* Botón */
+.solicitar-vacaciones-button {
+    padding: 0.8rem 2rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: background-color 0.3s ease;
+}
+
+/* Hover del botón */
+.solicitar-vacaciones-button:hover {
+    background-color: #45a049;
+}

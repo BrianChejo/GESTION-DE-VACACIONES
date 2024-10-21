@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';  // Importamos Link para el enlace a Registro
-import './FormStyles.css';  // Reutilizamos los estilos del formulario
-import './Login.css';
+import { useNavigate, Link } from 'react-router-dom';
+import '../StylesPages/Login.css';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -15,14 +14,9 @@ const Login: React.FC = () => {
     try {
       const response = await axios.post('http://localhost:5000/api/login', { email, password });
       const { role } = response.data;
-      
-      // Redireccionar según el rol del usuario
-      if (role === 'cliente') {
-        navigate('/cliente-dashboard');
-      } else if (role === 'recursos_humanos') {
-        navigate('/recursos-humanos-dashboard');
-      } else if (role === 'administrador') {
-        navigate('/admin-dashboard');
+
+      if (role) {
+        navigate('/inicio');
       }
     } catch (err) {
       setError('Correo o contraseña incorrectos.');
@@ -30,23 +24,23 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="login-container">
       <h2>Iniciar Sesión</h2>
       <form onSubmit={handleSubmit}>
-        <label>Email:</label>
-        <input 
-          type="email" 
-          value={email} 
-          onChange={(e) => setEmail(e.target.value)} 
-          required 
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Correo electrónico"
+          required
         />
 
-        <label>Contraseña:</label>
-        <input 
-          type="password" 
-          value={password} 
-          onChange={(e) => setPassword(e.target.value)} 
-          required 
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Contraseña"
+          required
         />
 
         <button type="submit">Iniciar Sesión</button>
@@ -54,7 +48,7 @@ const Login: React.FC = () => {
         {error && <p className="error">{error}</p>}
       </form>
 
-      <p>¿No tienes una cuenta? <Link to="/register">Regístrate aquí</Link></p>  {/* Enlace a registro */}
+      <Link to="/register" className="register-link">¿No tienes una cuenta? Regístrate aquí</Link>
     </div>
   );
 };

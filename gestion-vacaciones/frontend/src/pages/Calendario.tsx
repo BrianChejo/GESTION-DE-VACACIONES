@@ -1,10 +1,14 @@
 import React from 'react';
 import FullCalendar from '@fullcalendar/react'; // Importar FullCalendar
 import dayGridPlugin from '@fullcalendar/daygrid'; // Plugin para la vista de cuadrícula
+import Navbar from '../components/Navbar';
+import '../StylesPages/Calendario.css';
+
 
 const Calendario: React.FC = () => {
   return (
     <div>
+      <Navbar />
       <h1>Calendario de Vacaciones</h1>
       <FullCalendar
         plugins={[dayGridPlugin]}
