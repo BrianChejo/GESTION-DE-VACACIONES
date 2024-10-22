@@ -1,48 +1,58 @@
-const db = require('../db');
+const { Usuario } = require('../routes/usuarios');
+const multer = require('multer');
+const path = require('path');
 
-// Función para crear un usuario
-const crearUsuario = (req, res) => {
-    const { nombre, email, rol } = req.body;
-    const query = 'INSERT INTO usuarios (nombre, email, rol) VALUES (?, ?, ?)';
+// Configuración de multer para almacenar las fotos de perfil
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/');
+    },
+    filename: function (req, file, cb) {
+        cb(null, `${Date.now()}-${file.originalname}`);
+    }
+});
 
-    db.query(query, [nombre, email, rol], (err, result) => {
-        if (err) {
-            console.error('Error al crear el usuario:', err);
-            return res.status(500).send('Error al crear el usuario');
+const upload = multer({ storage: storage });
+
+// Controlador para obtener los datos del perfil de un usuario
+const obtenerPerfil = async (req, res) => {
+    try {
+        const usuario = await Usuario.findByPk(req.userId);  // Asegúrate de que req.userId está siendo seteado al validar el token
+        if (!usuario) {
+            return res.status(404).json({ mensaje: 'Usuario no encontrado' });
         }
-        res.status(200).send('Usuario creado correctamente');
-    });
+        res.json(usuario);
+    } catch (error) {
+        res.status(500).json({ mensaje: 'Error al obtener el perfil', error });
+    }
 };
 
-// Función para listar todos los usuarios
-const listarUsuarios = (req, res) => {
-    const query = 'SELECT * FROM usuarios';
+// Controlador para actualizar el perfil
+const actualizarPerfil = async (req, res) => {
+    try {
+        const { nombre, descripcion } = req.body;
+        const usuario = await Usuario.findByPk(req.userId);
 
-    db.query(query, (err, results) => {
-        if (err) {
-            console.error('Error al obtener los usuarios:', err);
-            return res.status(500).send('Error al obtener los usuarios');
+        if (!usuario) {
+            return res.status(404).json({ mensaje: 'Usuario no encontrado' });
         }
-        res.status(200).json(results);
-    });
-};
 
-// Función para eliminar un usuario
-const eliminarUsuario = (req, res) => {
-    const usuarioId = req.params.id;
-    const query = 'DELETE FROM usuarios WHERE id = ?';
+        usuario.nombre = nombre || usuario.nombre;
+        usuario.descripcion = descripcion || usuario.descripcion;
 
-    db.query(query, [usuarioId], (err, result) => {
-        if (err) {
-            console.error('Error al eliminar el usuario:', err);
-            return res.status(500).send('Error al eliminar el usuario');
+        if (req.file) {
+            usuario.fotoPerfil = req.file.path;  // Guarda la ruta del archivo subido
         }
-        res.status(200).send('Usuario eliminado correctamente');
-    });
+
+        await usuario.save();
+        res.json({ mensaje: 'Perfil actualizado correctamente', usuario });
+    } catch (error) {
+        res.status(500).json({ mensaje: 'Error al actualizar el perfil', error });
+    }
 };
 
 module.exports = {
-    crearUsuario,
-    listarUsuarios,
-    eliminarUsuario
+    obtenerPerfil,
+    actualizarPerfil,
+    upload
 };

@@ -3,7 +3,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    min-height: 30vh;
     background-color: #f4f6f9; /* Fondo más claro */
     font-family: 'Arial', sans-serif;
     padding: 20px;
