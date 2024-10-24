@@ -1,19 +1,16 @@
-const mysql = require('mysql2');
+const { Sequelize } = require('sequelize');
 
-// Configuración de la conexión a MySQL
-const connection = mysql.createConnection({
-    host: 'localhost',           // Cambia según el entorno (puede ser localhost o un host remoto)
-    user: 'root',                // Usuario de MySQL (cambia si es necesario)
-    password: '1234',   // Contraseña de MySQL
-    database: 'gestion_vacaciones' // Nombre de la base de datos
+const sequelize = new Sequelize('gestion_vacaciones', 'root', '1234', {
+    host: 'localhost',
+    dialect: 'mysql', // O el dialecto que estés usando
 });
 
-connection.connect((err) => {
-    if (err) {
-        console.error('Error al conectar a MySQL:', err);
-        return;
-    }
-    console.log('Conexión exitosa a MySQL');
-});
+sequelize.authenticate()
+    .then(() => {
+        console.log('Conexión exitosa a MySQL');
+    })
+    .catch((error) => {
+        console.error('Error al conectar a la base de datos:', error);
+    });
 
-module.exports = connection;
+module.exports = sequelize;

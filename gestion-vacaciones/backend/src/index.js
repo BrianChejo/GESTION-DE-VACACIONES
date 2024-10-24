@@ -9,7 +9,9 @@ const app = express();
 const port = 5000;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000' // Cambia esto al puerto de tu frontend si es diferente
+}));
 app.use(bodyParser.json());
 
 // Ruta de prueba para verificar que el servidor está funcionando
@@ -21,6 +23,9 @@ app.get('/', (req, res) => {
 app.use('/api/vacaciones', vacacionesRoutes);  // Rutas para vacaciones
 app.use('/api/usuarios', usuariosRoutes);      // Rutas para usuarios
 app.use('/api', authRoutes);                   // Rutas para autenticación (login, register)
+
+// Configurar el directorio de uploads para servir archivos estáticos
+app.use('/uploads', express.static('uploads'));
 
 // Iniciar el servidor
 app.listen(port, () => {

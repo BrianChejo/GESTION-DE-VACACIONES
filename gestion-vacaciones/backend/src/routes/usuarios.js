@@ -1,12 +1,20 @@
 const express = require('express');
 const router = express.Router();
-const usuarioController = require('../controllers/usuariosController');
-const { obtenerPerfil, actualizarPerfil, upload } = require('../controllers/usuariosController');
+const Usuario = require('./models/usuario');
 
-// Ruta para obtener los datos del perfil
-router.get('/perfil', obtenerPerfil);
-
-// Ruta para actualizar el perfil (incluyendo la carga de la foto de perfil)
-router.post('/perfil', upload.single('fotoPerfil'), actualizarPerfil);
+// Definir el endpoint para obtener el perfil del usuario
+router.get('/perfil', async (req, res) => {
+    try {
+        // Aquí deberías obtener el usuario de la base de datos
+        const usuario = await Usuario.findByPk(req.user.id); // Asegúrate de que `req.user` esté definido
+        if (!usuario) {
+            return res.status(404).json({ error: 'Usuario no encontrado' });
+        }
+        res.json(usuario);
+    } catch (error) {
+        console.error('Error al obtener el perfil:', error);
+        res.status(500).json({ error: 'Error al obtener el perfil' });
+    }
+});
 
 module.exports = router;
