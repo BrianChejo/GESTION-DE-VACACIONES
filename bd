@@ -1,0 +1,27 @@
+use gestion_vacaciones;
+select * from usuarios;
+select * from solicitudes_vacaciones;
+drop table solicitudes_vacaciones;
+-- puede ser que tambien la razon sea xq la tabla sea la siguiente:
+CREATE TABLE solicitudes_vacaciones (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  fecha_inicio text NOT NULL,
+  fecha_fin text NOT NULL,
+  estado ENUM('pendiente', 'aprobada', 'rechazada') DEFAULT 'pendiente',
+  motivo TEXT,
+  FOREIGN KEY (user_id) REFERENCES usuarios(id)
+  );
+  CREATE TABLE usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    descripcion TEXT,
+    rol VARCHAR(50) NOT NULL  -- Roles: "empleado", "administrador"
+);
+delete from usuarios where id=6;
+update solicitudes_vacaciones set estado = 'pendiente' where id='1';
+update usuarios set rol = 'empleado' where id='4';
+update usuarios set rol = 'administrador' where id='5';
+
