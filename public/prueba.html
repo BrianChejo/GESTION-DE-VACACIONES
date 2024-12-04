@@ -13,39 +13,37 @@
     <div class="container mt-5">
         <h1 class="mb-4">Gestión de Solicitudes de Vacaciones</h1>
 
-        <!-- Filtro por estado y nombre -->
         <div class="mb-3">
-            <label for="filtroNombre" class="form-label">Buscar por Nombre</label>
-            <input type="text" id="filtroNombre" class="form-control" placeholder="Nombre del usuario">
+            <label for="filtroUsuario" class="form-label">Filtrar por Usuario</label>
+            <input type="text" id="filtroUsuario" class="form-control" placeholder="Escribe el nombre de usuario">
         </div>
+        
+        <!-- Filtro por estado -->
         <div class="mb-3">
             <label for="filtroEstado" class="form-label">Filtrar por Estado</label>
             <select id="filtroEstado" class="form-select">
                 <option value="">Todos</option>
-                <option value="pendiente">Pendiente</option>
-                <option value="aprobada">Aprobada</option>
-                <option value="rechazada">Rechazada</option>
+                <option value="Pendiente">Pendiente</option>
+                <option value="Aprobada">Aprobada</option>
+                <option value="Rechazada">Rechazada</option>
             </select>
         </div>
 
-        <div class="card mb-4">
-            <div class="card-header">Historial de Solicitudes</div>
-            <div class="card-body">
-                <table class="table table-bordered" id="historialTable">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Usuario</th>
-                            <th>Fecha de Inicio</th>
-                            <th>Fecha de Fin</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="historialTableBody"></tbody> <!-- Cambié el id del tbody -->
-                </table>
-            </div>
-        </div>
+        <table class="table table-bordered" id="solicitudesHistorialTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Empleado</th>
+                    <th>Fecha de Inicio</th>
+                    <th>Fecha de Fin</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Las solicitudes aprobadas o rechazadas se llenarán aquí mediante JavaScript -->
+            </tbody>
+        </table>
     </div>
 
     <!-- Modal de edición de solicitud -->
@@ -94,6 +92,6 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/loadNav.js"></script>
-    <script src="js/logicaGestionSolicitud.js"></script>
+    <script src="js/prueba.js"></script>
 </body>
 </html>

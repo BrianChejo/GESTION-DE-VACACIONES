@@ -33,7 +33,7 @@ function obtenerSolicitudesPendientes() {
 
 // Función para obtener el historial de solicitudes (aprobadas/rechazadas)
 function obtenerHistorialSolicitudes() {
-    $.get(`${apiBaseUrl}/historial`, function(data) {
+    $.get(`${apiBaseUrl}/historial2`, function(data) {
         const tableBody = $('#solicitudesHistorialTable tbody');
         tableBody.empty(); // Limpiar la tabla
 
@@ -66,7 +66,7 @@ function filtrarSolicitudesPorEstado(estado) {
         const row = `
             <tr>
                 <td>${solicitud.id}</td>
-                <td>${solicitud.user_id}</td>
+                <td>${solicitud.usuario}</td>
                 <td>${solicitud.fecha_inicio}</td>
                 <td>${solicitud.fecha_fin}</td>
                 <td>${solicitud.estado}</td>

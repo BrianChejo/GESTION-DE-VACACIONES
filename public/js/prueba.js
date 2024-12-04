@@ -1,33 +1,36 @@
 const apiBaseUrl = 'http://localhost:3001/solicitud'; // URL base del backend
 
-// Función para obtener el historial de solicitudes (aprobadas/rechazadas)
 function obtenerHistorialSolicitudes() {
     $.get(`${apiBaseUrl}/historial2`, function(data) {
-        console.log(data); // Añadido para depuración
-        const tableBody = $('#historialTableBody');
+        const tableBody = $('#solicitudesHistorialTable tbody');
         tableBody.empty(); // Limpiar la tabla
-    
+
         if (data.success) {
+            // Guardar las solicitudes en una variable global para el filtrado
             window.solicitudes = data.solicitudes;
-            filtrarSolicitudesPorEstado('');
+            // Inicialmente, mostrar todas las solicitudes
+            filtrarSolicitudes('');
         } else {
             alert('No se pudieron obtener el historial de solicitudes');
         }
     }).fail(function() {
         alert('Error al obtener el historial de solicitudes');
     });
-    
 }
 
-// Función para filtrar las solicitudes por estado
-function filtrarSolicitudesPorEstado(estado) {
-    const tableBody = $('#historialTableBody');  // Asegurándonos que usamos el id correcto
+
+function filtrarSolicitudes() {
+    const estado = $('#filtroEstado').val(); // Obtener el valor del filtro por estado
+    const usuario = $('#filtroUsuario').val().toLowerCase(); // Obtener el valor del filtro por nombre de usuario
+
+    const tableBody = $('#solicitudesHistorialTable tbody');
     tableBody.empty(); // Limpiar la tabla
 
-    // Filtrar las solicitudes si hay un estado seleccionado
+    // Filtrar las solicitudes según el estado y el nombre de usuario
     const solicitudesFiltradas = window.solicitudes.filter(solicitud => {
-        if (estado === '') return true; // Si no hay filtro, mostrar todas las solicitudes
-        return solicitud.estado.toLowerCase() === estado.toLowerCase();
+        const coincideEstado = estado === '' || solicitud.estado.toLowerCase() === estado.toLowerCase();
+        const coincideUsuario = usuario === '' || solicitud.usuario.toLowerCase().includes(usuario);
+        return coincideEstado && coincideUsuario;
     });
 
     // Agregar las solicitudes filtradas a la tabla
@@ -35,12 +38,12 @@ function filtrarSolicitudesPorEstado(estado) {
         const row = `
             <tr>
                 <td>${solicitud.id}</td>
-                <td>${solicitud.usuario}</td> <!-- Cambio de "user_id" a "usuario" -->
+                <td>${solicitud.usuario}</td> <!-- Aquí mostramos el nombre del usuario -->
                 <td>${solicitud.fecha_inicio}</td>
                 <td>${solicitud.fecha_fin}</td>
                 <td>${solicitud.estado}</td>
                 <td>
-                    <button class="btn btn-warning" onclick="abrirModalEditar(${solicitud.id}, '${solicitud.motivo}', '${solicitud.fecha_inicio}', '${solicitud.fecha_fin}', '${solicitud.estado}', '${solicitud.user_id}')">Editar</button>
+                    <button class="btn btn-warning" onclick="abrirModalEditar(${solicitud.id}, '${solicitud.motivo}', '${solicitud.fecha_inicio}', '${solicitud.fecha_fin}', '${solicitud.estado}')">Editar</button>
                     <button class="btn btn-danger" onclick="eliminarSolicitud(${solicitud.id})">Eliminar</button>
                 </td>
             </tr>
@@ -87,7 +90,7 @@ document.getElementById('guardarEdicion').addEventListener('click', async () => 
         const data = await response.json();
         if (data.success) {
             alert('Solicitud modificada correctamente.');
-            obtenerHistorialSolicitudes();  // Recargar las solicitudes
+            obtenerSolicitudesPendientes();  // Recargar las solicitudes
             const modal = bootstrap.Modal.getInstance(document.getElementById('modalEditarSolicitud'));
             modal.hide(); // Cerrar el modal
         } else {
@@ -123,47 +126,12 @@ function eliminarSolicitud(id) {
 $(document).ready(function() {
     obtenerHistorialSolicitudes();
 
-    // Agregar el evento para filtrar por estado
+    // Agregar los eventos para filtrar por estado y usuario
     $('#filtroEstado').on('change', function() {
-        const estadoSeleccionado = $(this).val();
-        filtrarSolicitudesPorEstado(estadoSeleccionado);
+        filtrarSolicitudes(); // Filtrar por estado y usuario
     });
 
-    // Agregar el evento para filtrar por nombre
-    $('#filtroNombre').on('input', function() {
-        const nombreSeleccionado = $(this).val().toLowerCase();
-        filtrarSolicitudesPorNombre(nombreSeleccionado);
+    $('#filtroUsuario').on('input', function() {
+        filtrarSolicitudes(); // Filtrar por usuario y estado
     });
-});
-
-// Función para filtrar solicitudes por nombre
-function filtrarSolicitudesPorNombre(nombre) {
-    const tableBody = $('#historialTableBody');
-    tableBody.empty(); // Limpiar la tabla
-
-    // Filtrar las solicitudes por nombre
-    const solicitudesFiltradas = window.solicitudes.filter(solicitud => {
-        return solicitud.usuario.toLowerCase().includes(nombre);
-    });
-
-    // Agregar las solicitudes filtradas a la tabla
-    solicitudesFiltradas.forEach(solicitud => {
-        const row = `
-            <tr>
-                <td>${solicitud.id}</td>
-                <td>${solicitud.usuario}</td>
-                <td>${solicitud.fecha_inicio}</td>
-                <td>${solicitud.fecha_fin}</td>
-                <td>${solicitud.estado}</td>
-                <td>
-                    <button class="btn btn-warning" onclick="abrirModalEditar(${solicitud.id}, '${solicitud.motivo}', '${solicitud.fecha_inicio}', '${solicitud.fecha_fin}', '${solicitud.estado}', '${solicitud.user_id}')">Editar</button>
-                    <button class="btn btn-danger" onclick="eliminarSolicitud(${solicitud.id})">Eliminar</button>
-                </td>
-            </tr>
-        `;
-        tableBody.append(row);
-    });
-}
-$(document).ready(function() {
-    obtenerHistorialSolicitudes();
 });
