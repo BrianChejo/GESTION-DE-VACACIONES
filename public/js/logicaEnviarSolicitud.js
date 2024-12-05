@@ -147,32 +147,24 @@ document.getElementById('guardarEdicion').addEventListener('click', async () => 
 });
 
 // Función para eliminar una solicitud
-async function eliminarSolicitud(id) {
-    if (!confirm('¿Estás seguro de que quieres eliminar esta solicitud?')) return;
-
-    try {
-        const response = await fetch(`http://localhost:3001/solicitud/eliminar/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
+// Función para eliminar solicitud
+function eliminarSolicitud(id) {
+    if (confirm('¿Estás seguro de que deseas eliminar esta solicitud?')) {
+        $.ajax({
+            url: `/solicitud/eliminar/${id}`,  // Aquí estás pasando el id de la solicitud a eliminar
+            type: 'DELETE',
+            success: function(data) {
+                if (data.success) {
+                    alert('Solicitud eliminada');
+                    obtenerHistorialSolicitudes(); // Actualizar lista
+                } else {
+                    alert('Error al eliminar la solicitud');
+                }
             },
-            credentials: 'include', // Enviar las cookies para la autenticación
+            error: function() {
+                alert('Error al eliminar la solicitud');
+            }
         });
-
-        if (!response.ok) {
-            throw new Error('Error al eliminar la solicitud. Código de estado: ' + response.status);
-        }
-
-        const data = await response.json();
-        if (data.success) {
-            alert('Solicitud eliminada correctamente.');
-            cargarSolicitudesPendientes(); // Recargar las solicitudes
-        } else {
-            alert(data.message || 'Error al eliminar la solicitud.');
-        }
-    } catch (error) {
-        alert('Error al eliminar la solicitud.');
-        console.error(error); // Mostrar error en la consola para depuración
     }
 }
 
