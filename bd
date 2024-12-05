@@ -18,6 +18,7 @@ CREATE TABLE solicitudes_vacaciones (
     email VARCHAR(100) NOT NULL,
     password VARCHAR(255) NOT NULL,
     descripcion TEXT,
+    foto_perfil VARCHAR(255),
     rol VARCHAR(50) NOT NULL  -- Roles: "empleado", "administrador"
 );
 delete from usuarios where id=6;

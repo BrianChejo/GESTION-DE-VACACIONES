@@ -4,20 +4,45 @@ const router = express.Router();
 const { isAuthenticated, authorize } = require('../middleware');
 const db = require('../db');
 
-// Obtener solicitudes pendientes con nombres de usuario
+
+// Obtener historial de solicitudes con nombres de usuario
 router.get('/pendientes2', (req, res) => {
-  const query = `
-    SELECT s.id, u.nombre AS usuario, s.fecha_inicio, s.fecha_fin, s.estado
-    FROM solicitudes_vacaciones s
-    INNER JOIN usuarios u ON s.user_id = u.id
-    WHERE s.estado = 'pendiente'
+  // Obtener todas las solicitudes
+  const solicitudesQuery = `
+    SELECT id, user_id, motivo, fecha_inicio, fecha_fin, estado
+    FROM solicitudes_vacaciones WHERE estado = "pendiente"
   `;
-  db.query(query, (err, results) => {
+  
+  // Obtener todos los usuarios
+  const usuariosQuery = `
+    SELECT id, nombre
+    FROM usuarios
+  `;
+  
+  db.query(solicitudesQuery, (err, solicitudes) => {
     if (err) {
-      console.error('Error al obtener solicitudes pendientes:', err);
-      return res.status(500).json({ success: false, message: 'Error al obtener solicitudes pendientes' });
+      console.error('Error al obtener solicitudes:', err);
+      return res.status(500).json({ success: false, message: 'Error al obtener las solicitudes' });
     }
-    res.status(200).json({ success: true, solicitudes: results });
+
+    db.query(usuariosQuery, (err, usuarios) => {
+      if (err) {
+        console.error('Error al obtener usuarios:', err);
+        return res.status(500).json({ success: false, message: 'Error al obtener los usuarios' });
+      }
+
+      // Asocia los nombres de usuario a las solicitudes
+      const solicitudesConNombres = solicitudes.map(solicitud => {
+        const usuario = usuarios.find(u => u.id === solicitud.user_id);
+        return {
+          ...solicitud,
+          usuario: usuario ? usuario.nombre : 'Usuario no encontrado'
+        };
+      });
+
+      // Responder con el historial de solicitudes
+      res.json({ success: true, solicitudes: solicitudesConNombres });
+    });
   });
 });
 
@@ -25,7 +50,7 @@ router.get('/pendientes2', (req, res) => {
 router.get('/historial2', (req, res) => {
   // Obtener todas las solicitudes
   const solicitudesQuery = `
-    SELECT id, user_id, fecha_inicio, fecha_fin, estado
+    SELECT id, user_id, motivo, fecha_inicio, fecha_fin, estado
     FROM solicitudes_vacaciones
   `;
   

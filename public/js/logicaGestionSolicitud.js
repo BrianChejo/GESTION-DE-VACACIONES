@@ -2,7 +2,7 @@ const apiBaseUrl = 'http://localhost:3001/solicitud'; // URL base del backend
 
 // Función para obtener las solicitudes pendientes
 function obtenerSolicitudesPendientes() {
-    $.get(`${apiBaseUrl}/pendientes`, function(data) {
+    $.get(`${apiBaseUrl}/pendientes2`, function(data) {
         const tableBody = $('#solicitudesTable tbody');
         tableBody.empty(); // Limpiar la tabla
 
@@ -11,7 +11,7 @@ function obtenerSolicitudesPendientes() {
                 const row = `
                     <tr>
                         <td>${solicitud.id}</td>
-                        <td>${solicitud.user_id}</td>
+                        <td>${solicitud.usuario}</td>
                         <td>${solicitud.fecha_inicio}</td>
                         <td>${solicitud.fecha_fin}</td>
                         <td>${solicitud.estado}</td>
@@ -28,55 +28,6 @@ function obtenerSolicitudesPendientes() {
         }
     }).fail(function() {
         alert('Error al obtener las solicitudes pendientes');
-    });
-}
-
-// Función para obtener el historial de solicitudes (aprobadas/rechazadas)
-function obtenerHistorialSolicitudes() {
-    $.get(`${apiBaseUrl}/historial2`, function(data) {
-        const tableBody = $('#solicitudesHistorialTable tbody');
-        tableBody.empty(); // Limpiar la tabla
-
-        if (data.success) {
-            // Guardar las solicitudes en una variable global para el filtrado
-            window.solicitudes = data.solicitudes;
-            // Inicialmente, mostrar todas las solicitudes
-            filtrarSolicitudesPorEstado('');
-        } else {
-            alert('No se pudieron obtener el historial de solicitudes');
-        }
-    }).fail(function() {
-        alert('Error al obtener el historial de solicitudes');
-    });
-}
-
-// Función para filtrar las solicitudes por estado
-function filtrarSolicitudesPorEstado(estado) {
-    const tableBody = $('#solicitudesHistorialTable tbody');
-    tableBody.empty(); // Limpiar la tabla
-
-    // Filtrar las solicitudes si hay un estado seleccionado
-    const solicitudesFiltradas = window.solicitudes.filter(solicitud => {
-        if (estado === '') return true; // Si no hay filtro, mostrar todas las solicitudes
-        return solicitud.estado.toLowerCase() === estado.toLowerCase();
-    });
-
-    // Agregar las solicitudes filtradas a la tabla
-    solicitudesFiltradas.forEach(solicitud => {
-        const row = `
-            <tr>
-                <td>${solicitud.id}</td>
-                <td>${solicitud.usuario}</td>
-                <td>${solicitud.fecha_inicio}</td>
-                <td>${solicitud.fecha_fin}</td>
-                <td>${solicitud.estado}</td>
-                <td>
-                    <button class="btn btn-warning" onclick="abrirModalEditar(${solicitud.id}, '${solicitud.motivo}', '${solicitud.fecha_inicio}', '${solicitud.fecha_fin}', '${solicitud.estado}')">Editar</button>
-                    <button class="btn btn-danger" onclick="eliminarSolicitud(${solicitud.id})">Eliminar</button>
-                </td>
-            </tr>
-        `;
-        tableBody.append(row);
     });
 }
 
@@ -109,6 +60,60 @@ function rechazarSolicitud(id) {
         alert('Error al rechazar la solicitud');
     });
 }
+
+function obtenerHistorialSolicitudes() {
+    $.get(`${apiBaseUrl}/historial2`, function(data) {
+        const tableBody = $('#solicitudesHistorialTable tbody');
+        tableBody.empty(); // Limpiar la tabla
+
+        if (data.success) {
+            // Guardar las solicitudes en una variable global para el filtrado
+            window.solicitudes = data.solicitudes;
+            // Inicialmente, mostrar todas las solicitudes
+            filtrarSolicitudes('');
+        } else {
+            alert('No se pudieron obtener el historial de solicitudes');
+        }
+    }).fail(function() {
+        alert('Error al obtener el historial de solicitudes');
+    });
+}
+
+
+function filtrarSolicitudes() {
+    const estado = $('#filtroEstado').val(); // Obtener el valor del filtro por estado
+    const usuario = $('#filtroUsuario').val().toLowerCase(); // Obtener el valor del filtro por nombre de usuario
+
+    const tableBody = $('#solicitudesHistorialTable tbody');
+    tableBody.empty(); // Limpiar la tabla
+
+    // Filtrar las solicitudes según el estado y el nombre de usuario
+    const solicitudesFiltradas = window.solicitudes.filter(solicitud => {
+        const coincideEstado = estado === '' || solicitud.estado.toLowerCase() === estado.toLowerCase();
+        const coincideUsuario = usuario === '' || solicitud.usuario.toLowerCase().includes(usuario);
+        return coincideEstado && coincideUsuario;
+    });
+
+    // Agregar las solicitudes filtradas a la tabla
+    solicitudesFiltradas.forEach(solicitud => {
+        const row = `
+            <tr>
+                <td>${solicitud.id}</td>
+                <td>${solicitud.usuario}</td> <!-- Aquí mostramos el nombre del usuario -->
+                <td>${solicitud.motivo}</td>
+                <td>${solicitud.fecha_inicio}</td>
+                <td>${solicitud.fecha_fin}</td>
+                <td>${solicitud.estado}</td>
+                <td>
+                    <button class="btn btn-warning" onclick="abrirModalEditar(${solicitud.id}, '${solicitud.motivo}', '${solicitud.fecha_inicio}', '${solicitud.fecha_fin}', '${solicitud.estado}')">Editar</button>
+                    <button class="btn btn-danger" onclick="eliminarSolicitud(${solicitud.id})">Eliminar</button>
+                </td>
+            </tr>
+        `;
+        tableBody.append(row);
+    });
+}
+
 // Función para abrir el modal de edición y cargar los valores de la solicitud
 function abrirModalEditar(id, motivo, fechaInicio, fechaFin, estado, userId) {
     document.getElementById('editarId').value = id;
@@ -159,7 +164,6 @@ document.getElementById('guardarEdicion').addEventListener('click', async () => 
     }
 });
 
-
 // Función para eliminar solicitud
 function eliminarSolicitud(id) {
     if (confirm('¿Estás seguro de que deseas eliminar esta solicitud?')) {
@@ -182,12 +186,15 @@ function eliminarSolicitud(id) {
 }
 
 $(document).ready(function() {
-    obtenerSolicitudesPendientes();
     obtenerHistorialSolicitudes();
+    obtenerSolicitudesPendientes();
 
-    // Agregar el evento para filtrar por estado
+    // Agregar los eventos para filtrar por estado y usuario
     $('#filtroEstado').on('change', function() {
-        const estadoSeleccionado = $(this).val();
-        filtrarSolicitudesPorEstado(estadoSeleccionado);
+        filtrarSolicitudes(); // Filtrar por estado y usuario
+    });
+
+    $('#filtroUsuario').on('input', function() {
+        filtrarSolicitudes(); // Filtrar por usuario y estado
     });
 });

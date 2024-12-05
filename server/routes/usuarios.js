@@ -4,6 +4,49 @@ const db = require('../db');
 const router = express.Router();
 
 // Registro de usuario
+router.post('/registro2', (req, res) => {
+  const { nombre, email, password, rol } = req.body;
+
+  // Validar que los campos obligatorios no estén vacíos
+  if (!nombre || !email || !password) {
+      return res.json({ success: false, message: 'Faltan campos obligatorios' });
+  }
+
+  // Verificar si el usuario ya existe con ese email
+  const checkUserQuery = 'SELECT * FROM usuarios WHERE email = ?';
+  db.query(checkUserQuery, [email], (err, results) => {
+      if (err) {
+          console.error('Error al verificar el usuario:', err);
+          return res.json({ success: false, message: 'Error al verificar el usuario' });
+      }
+
+      // Si ya existe un usuario con ese correo electrónico
+      if (results.length > 0) {
+          return res.json({ success: false, message: 'Este email ya está registrado' });
+      }
+
+      // Hash de la contraseña
+      bcrypt.hash(password, 10, (err, hashedPassword) => {
+          if (err) {
+              return res.json({ success: false, message: 'Error al procesar la contraseña' });
+          }
+
+          // Insertar los datos del usuario en la base de datos
+          const query = 'INSERT INTO usuarios (nombre, email, password, rol) VALUES (?, ?, ?, ?)';
+          db.query(query, [nombre, email, hashedPassword, rol], (err, result) => {
+              if (err) {
+                  console.error('Error al registrar usuario:', err);
+                  return res.json({ success: false, message: 'Error al registrar el usuario' });
+              }
+
+              // Responder con éxito
+              res.json({ success: true, message: 'Usuario registrado correctamente' });
+          });
+      });
+  });
+});
+
+// Registro de usuario
 router.post('/registro', (req, res) => {
   const { nombre, email, password, rol = 'empleado' } = req.body;
 

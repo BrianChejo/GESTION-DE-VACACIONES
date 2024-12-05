@@ -34,8 +34,6 @@ document.addEventListener('DOMContentLoaded', function () {
           menuItems.innerHTML += `
             <li class="nav-item"><a class="nav-link" href="usuarios.html">Usuarios</a></li>
             <li class="nav-item"><a class="nav-link" href="gestionSolicitud.html">Solicitudes</a></li>
-            <li class="nav-item"><a class="nav-link" href="prueba.html">Prueba</a></li>
-
 
           `;
         }
